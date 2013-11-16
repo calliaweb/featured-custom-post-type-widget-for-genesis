@@ -13,7 +13,7 @@ Useful until the Genesis Featured Widget Amplified is updated to Genesis 2.0.
 Genesis 2.0+
 
 ## Credits
-I've taken the code produced by StudioPress for their inbuilt Featured Posts Widget and added the code by Nick The Geek in the Genesis Featured Amplified Widget for displaying a list of custom post types.
+I've taken the code produced by <a href="http://www.studiopress.com/">StudioPress</a> for their inbuilt Featured Posts Widget and added the code by <a href="https://twitter.com/Nick_theGeek">Nick The Geek</a> in the <a href="http://wordpress.org/plugins/genesis-featured-widget-amplified/">Genesis Featured Amplified Widget</a> for displaying a list of custom post types.
 
 ## Installation
 
