@@ -13,7 +13,7 @@ Useful until the Genesis Featured Widget Amplified is updated to Genesis 2.0.
 Genesis 2.0+
 
 ## Credits
-I've taken the code produced by <a href="http://www.studiopress.com/">StudioPress</a> for their inbuilt Featured Posts Widget and added the code by <a href="https://twitter.com/Nick_theGeek">Nick The Geek</a> in the <a href="http://wordpress.org/plugins/genesis-featured-widget-amplified/">Genesis Featured Amplified Widget</a> for displaying a list of custom post types.
+Most of the code in this plugin is from the <a href="http://www.studiopress.com/">StudioPress</a> Genesis Featured Post Widget and I've just added Custom Post Type Support.
 
 ## Installation
 
@@ -33,4 +33,10 @@ I've taken the code produced by <a href="http://www.studiopress.com/">StudioPres
 
 Check out the Codex for more information about [installing plugins manually](http://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
 
+### Git
 
+Using git, browse to your /wp-content/plugins/ directory and clone this repository:
+
+git clone git@github.com:GaryJones/PROJECT-SLUG.git
+
+Then go to your Plugins screen and click Activate.
