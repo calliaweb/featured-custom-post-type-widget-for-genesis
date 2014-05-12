@@ -1,25 +1,28 @@
 <?php
 /**
- * Genesis Featured Custom Post Type Widget
+ * Featured Custom Post Type Widget For Genesis
  *
- * @package GenesisFeaturedCustomPostTypeWidget
+ * @package FeaturedCustomPostTypeWidgetForGenesis
  * @author 	StudioPress
  * @author 	Jo Waltham
+ * @author  Pete Favelle
  * @license GPL-2.0+
  *
  */
  
  /**
- * Register Genesis Featured Custom Post Type Widget
+ * Register Featured Custom Post Type Widget For Genesis
  * 
- * @package GenesisFeaturedCustomPostTypeWidget
+ * @package FeaturedCustomPostTypeWidgetForGenesis
  * @author 	StudioPress
  * @author	Jo Waltham
+ * @author  Pete Favelle
  */
  
  /**
 * Please note that most of this code is from the Genesis Featured Post Widget included in the Genesis Framework.
-* I have just added support for Custom Post Types
+* I have just added support for Custom Post Types.
+* Pete has added support for Custom Taxonomies.
 */
 
  
@@ -427,6 +430,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 						<option value="alignnone">- <?php _e( 'None', 'genesis-featured-custom-post-type-widget' ); ?> -</option>
 						<option value="alignleft" <?php selected( 'alignleft', $instance['gravatar_alignment'] ); ?>><?php _e( 'Left', 'genesis-featured-custom-post-type-widget' ); ?></option>
 						<option value="alignright" <?php selected( 'alignright', $instance['gravatar_alignment'] ); ?>><?php _e( 'Right', 'genesis-featured-custom-post-type-widget' ); ?></option>
+						<option value="aligncenter" <?php selected( 'aligncenter', $instance['gravatar_alignment'] ); ?>><?php _e( 'Center', 'genesis-featured-custom-post-type-widget' ); ?></option>
 					</select>
 				</p>
 
@@ -457,6 +461,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 						<option value="alignnone">- <?php _e( 'None', 'genesis-featured-custom-post-type-widget' ); ?> -</option>
 						<option value="alignleft" <?php selected( 'alignleft', $instance['image_alignment'] ); ?>><?php _e( 'Left', 'genesis-featured-custom-post-type-widget' ); ?></option>
 						<option value="alignright" <?php selected( 'alignright', $instance['image_alignment'] ); ?>><?php _e( 'Right', 'genesis-featured-custom-post-type-widget' ); ?></option>
+						<option value="aligncenter" <?php selected( 'aligncenter', $instance['image_alignment'] ); ?>><?php _e( 'Center', 'genesis-featured-custom-post-type-widget' ); ?></option>
 					</select>
 				</p>
 
@@ -536,9 +541,6 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 
 	}
 
-<<<<<<< HEAD
-}
-=======
 	/**
 	 * Comparison function to allow custom taxonomy terms to be displayed
 	 * alphabetically. Required because the display is a compound of term
@@ -591,4 +593,4 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		die();
 	}
 }
->>>>>>> FETCH_HEAD
+

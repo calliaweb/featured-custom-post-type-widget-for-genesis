@@ -1,12 +1,10 @@
-# Genesis Featured Custom Post Type Widget
+# Featured Custom Post Type Widget for Genesis
 
 WordPress plugin that adds a widget to display Featured Custom Post Types for the Genesis Framework
 
 ## Description 
 
-WordPress plugin that adds a widget to display Featured Custom Post Types for the Genesis Framework.
-Created so that it can use the existing CSS in the Agency Pro theme to display the featured custom post types on the home page.
-Useful until the Genesis Featured Widget Amplified is updated to Genesis 2.0.
+WordPress plugin that adds a widget to display Featured Custom Post Types for the Genesis Framework. Supports Custom Taxonomies.
 
 ## Requirements
 
@@ -14,6 +12,7 @@ Genesis 2.0+
 
 ## Credits
 Most of the code in this plugin is from the <a href="http://www.studiopress.com/">StudioPress</a> Genesis Featured Post Widget and I've just added Custom Post Type Support.
+Thanks to <a href="https://github.com/ahnlak">Pete Favelle</a> for adding Custom Taxonomy support.
 
 ## Installation
 
