@@ -41,8 +41,8 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 
 		$this->defaults = array(
 			'title'                   => '',	
-			'post_type'				  => 'post',
-			'posts_cat'               => '',
+			'post_type'               => 'post',
+			'tax_term'                => '',
 			'posts_num'               => 1,
 			'posts_offset'            => 0,
 			'orderby'                 => '',
@@ -77,8 +77,11 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 			'height'  => 350,
 		);
 
-		parent::__construct( 'featured-custom-post-type', __( 'Genesis - Featured Custom Post Types', 'genesis-featured-custom-post-type-widget' ), $widget_ops, $control_ops );
+		parent::__construct( 'featured-custom-post-type', __( 'Featured Custom Post Types for Genesis', 'genesis-featured-custom-post-type-widget' ), $widget_ops, $control_ops );
 
+		// Register our Ajax handler
+		add_action( 'wp_ajax_tax_term_action', array( $this, 'tax_term_action_callback' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
 	}
 
 	/**
@@ -106,12 +109,23 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 
 		$query_args = array(
 			'post_type' => $instance['post_type'],
-			'cat'       => $instance['posts_cat'],
 			'showposts' => $instance['posts_num'],
 			'offset'    => $instance['posts_offset'],
 			'orderby'   => $instance['orderby'],
 			'order'     => $instance['order'],
 		);
+
+		// Extract the custom tax term, if provided
+		if ( 'any' != $instance['tax_term'] ) {
+			list( $post_tax, $post_term ) = explode( '/', $instance['tax_term'], 2 );
+			$query_args['tax_query'] = array(
+				array(
+					'taxonomy' => $post_tax,
+					'field'    => 'slug',
+					'terms'    => $post_term,
+				)
+			);
+		}
 
 		//* Exclude displayed IDs from this loop?
 		if ( $instance['exclude_displayed'] )
@@ -209,10 +223,21 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 
 			$query_args = array(
 				'post_type' => $instance['post_type'],
-				'cat'       => $instance['posts_cat'],
 				'showposts' => $instance['extra_num'],
 				'offset'    => $offset,
 			);
+
+			// Extract the custom tax term, if provided
+			if ( 'any' != $instance['tax_term'] ) {
+				list( $post_tax, $post_term ) = explode( '/', $instance['tax_term'], 2 );
+				$query_args['tax_query'] = array(
+					array(
+						'taxonomy' => $post_tax,
+						'field'    => 'slug',
+						'terms'    => $post_term,
+					)
+				);
+			 }
 
 			$wp_query = new WP_Query( $query_args );
 
@@ -233,13 +258,16 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 			wp_reset_query();
 		}
 
-		if ( ! empty( $instance['more_from_category'] ) && ! empty( $instance['posts_cat'] ) )
+		if ( ! empty( $instance['more_from_category'] ) 
+		&& ( 'category' == substr( $instance['tax_term'], 0, 8 ) ) ) {
+			$post_cat = get_cat_ID( substr( $instance['tax_term'], 9 ) );
 			printf(
 				'<p class="more-from-category"><a href="%1$s" title="%2$s">%3$s</a></p>',
-				esc_url( get_category_link( $instance['posts_cat'] ) ),
-				esc_attr( get_cat_name( $instance['posts_cat'] ) ),
+				esc_url( get_category_link( $post_cat ) ),
+				esc_attr( get_cat_name( $post_cat ) ),
 				esc_html( $instance['more_from_category_text'] )
 			);
+		}
 
 		echo $after_widget;
 
@@ -279,6 +307,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		//* Merge with defaults
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 		
+		// Fetch a list of possible post types
 		$args = array(
 			'public' => true
 		);
@@ -286,6 +315,19 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		$operator = 'and';
 		$post_type_list = get_post_types( $args, $output, $operator );
 
+		// And a list of available taxonomies for the current post type
+		if ( 'any' == $instance['post_type'] ) {
+			$taxonomies = get_taxonomies();
+		} else {
+			$taxonomies = get_object_taxonomies( $instance['post_type'] );
+		}
+
+		// And from there, a list of available terms in that tax
+		$tax_args = array( 
+			'hide_empty'	=> 0,
+		);
+		$tax_term_list = get_terms( $taxonomies, $tax_args );
+		usort( $tax_term_list, array( $this, 'tax_term_compare' ) );
 
 		?>
 		<p>
@@ -299,7 +341,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 			
 				<p>
 					<label for="<?php echo $this->get_field_id( 'post_type' ); ?>"><?php _e( 'Post Type', 'genesis-featured-custom-post-type-widget' ); ?>:</label>
-					<select id="<?php echo $this->get_field_id( 'post_type' ); ?>" name="<?php echo $this->get_field_name( 'post_type' ); ?>">
+					<select id="<?php echo $this->get_field_id( 'post_type' ); ?>" name="<?php echo $this->get_field_name( 'post_type' ); ?>" onchange="tax_term_postback('<?php echo $this->get_field_id( 'tax_term' ); ?>', this.value);" >
 
 						<?php
 						foreach ( $post_type_list as $post_type_item ) 
@@ -309,19 +351,20 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 						?>			
 					</select>
 				</p>
-
+			
 				<p>
-					<label for="<?php echo $this->get_field_id( 'posts_cat' ); ?>"><?php _e( 'Category', 'genesis-featured-custom-post-type-widget' ); ?>:</label>
-					<?php
-					$categories_args = array(
-						'name'            => $this->get_field_name( 'posts_cat' ),
-						'selected'        => $instance['posts_cat'],
-						'orderby'         => 'Name',
-						'hierarchical'    => 1,
-						'show_option_all' => __( 'All Categories', 'genesis-featured-custom-post-type-widget' ),
-						'hide_empty'      => '0',
-					);
-					wp_dropdown_categories( $categories_args ); ?>
+					<label for="<?php echo $this->get_field_id( 'tax_term' ); ?>"><?php _e( 'Category/Term', 'genesis-featured-custom-post-type-widget' ); ?>:</label>
+					<select id="<?php echo $this->get_field_id( 'tax_term' ); ?>" name="<?php echo $this->get_field_name( 'tax_term' ); ?>">
+
+						<?php
+						foreach ( $tax_term_list as $tax_term_item ) {
+							$tax_term_desc = $tax_term_item->taxonomy . '/' . $tax_term_item->name;
+							echo '<option style="padding-right:10px;" value="'. esc_attr( $tax_term_desc ) .'" '. selected( esc_attr( $tax_term_desc ), $instance['tax_term'], false ) .'>'. esc_attr( $tax_term_desc ) .'</option>'; 
+						}
+
+						echo '<option style="padding-right:10px;" value="any" '. selected( 'any', $instance['tax_term'], false ) .'>'. __( 'any', 'genesis-featured-custom-post-type-widget' ) .'</option>'; 
+						?>			
+					</select>
 				</p>
 
 				<p>
@@ -493,4 +536,59 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 
 	}
 
+<<<<<<< HEAD
 }
+=======
+	/**
+	 * Comparison function to allow custom taxonomy terms to be displayed
+	 * alphabetically. Required because the display is a compound of term
+	 * *and* taxonomy.
+	 */
+	function tax_term_compare( $a, $b ) {
+		if ( $a->taxonomy == $b->taxonomy ) {
+			return ($a->name < $b->name) ? -1 : 1;
+		}
+		return ($a->taxonomy <  $b->taxonomy)? -1 : 1;
+	}
+
+	/**
+	 * Enqueues the small bit of Javascript which will handle the Ajax
+	 * callback to correctly populate the custom term dropdown.
+	 */
+	function admin_enqueue( $hook ) {
+		wp_enqueue_script( 'tax-term-ajax-script', plugins_url( '/ajax_handler.js', __FILE__ ), array('jquery') );
+	  wp_localize_script( 'tax-term-ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+	}
+
+	/**
+	 * Handles the callback to populate the custom term dropdown. The
+	 * selected post type is provided in $_POST['post_type'], and the
+	 * calling script expects a JSON array of term objects.
+	 */
+	function tax_term_action_callback() {
+
+		// Fetch a list of available taxonomies for the current post type
+		if ( 'any' == $_POST['post_type'] ) {
+			$taxonomies = get_taxonomies();
+		} else {
+			$taxonomies = get_object_taxonomies( $_POST['post_type'] );
+		}
+
+		// And from there, a list of available terms in that tax
+		$tax_args = array( 
+			'hide_empty'	=> 0,
+		);
+		$tax_term_list = get_terms( $taxonomies, $tax_args );
+
+		// Build an appropriate JSON response containing this info
+		foreach ( $tax_term_list as $tax_term_item ) {
+			$taxes[] = $tax_term_item->taxonomy . '/' . $tax_term_item->name;
+		}
+		$taxes[] = 'any';
+
+		// And emit it
+		echo json_encode( $taxes );
+		die();
+	}
+}
+>>>>>>> FETCH_HEAD
