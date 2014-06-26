@@ -7,9 +7,9 @@
  *
  * @wordpress-plugin
  * Plugin Name: Featured Custom Post Type Widget for Genesis
- * Plugin URI:  http://calliaweb.co.uk/
+ * Plugin URI:  http://calliaweb.co.uk/featured-custom-post-type-widget-genesis/
  * Description: Widget to Display Featured Custom Post Types - uses code from Genesis Featured Post Widget and adds support for custom post types and custom taxonomies
- * Version:     1.1.0
+ * Version:     1.1.1
  * Author:      Jo Waltham
  * Author URI:  http://calliaweb.co.uk/
  * Text Domain: featured-custom-post-type-widget-for-genesis

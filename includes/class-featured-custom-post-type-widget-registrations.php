@@ -312,11 +312,15 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		
 		// Fetch a list of possible post types
 		$args = array(
-			'public' => true
+			'public' => true,
+			'_builtin' => false,
 		);
 		$output = 'names';
 		$operator = 'and';
 		$post_type_list = get_post_types( $args, $output, $operator );
+		
+		// Add posts to that post_type_list	
+		$post_type_list[ 'post' ] = 'post';
 
 		// And a list of available taxonomies for the current post type
 		if ( 'any' == $instance['post_type'] ) {
