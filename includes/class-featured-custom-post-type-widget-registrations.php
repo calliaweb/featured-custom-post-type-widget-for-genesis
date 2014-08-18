@@ -281,8 +281,6 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 				esc_html( $instance['archive_text'] )
 			);
 
-			//* Restore original query
-			wp_reset_query();
 		}
 
 		echo $after_widget;
