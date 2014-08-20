@@ -276,7 +276,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 
 		if ( ! empty( $instance['archive_link'] ) && ! empty( $instance['archive_text'] ) ) {
 			printf(
-				__( '<p class="more-from-category"><a href="%1$s">%2$s</a></p>', 'genesis' ),
+				'<p class="more-from-category"><a href="%1$s">%2$s</a></p>',
 				get_post_type_archive_link( $instance['post_type'] ),
 				esc_html( $instance['archive_text'] )
 			);
