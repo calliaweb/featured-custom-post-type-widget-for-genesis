@@ -581,9 +581,12 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 	 * Enqueues the small bit of Javascript which will handle the Ajax
 	 * callback to correctly populate the custom term dropdown.
 	 */
-	function admin_enqueue( $hook ) {
-		wp_enqueue_script( 'tax-term-ajax-script', plugins_url( '/ajax_handler.js', __FILE__ ), array('jquery') );
-	  wp_localize_script( 'tax-term-ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+	function admin_enqueue() {
+		$screen = get_current_screen()->id;
+		if ( $screen === 'widgets' || $screen === 'customize' ) {
+			wp_enqueue_script( 'tax-term-ajax-script', plugins_url( '/ajax_handler.js', __FILE__ ), array('jquery') );
+			wp_localize_script( 'tax-term-ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+		}
 	}
 
 	/**
