@@ -3,20 +3,12 @@
  * Featured Custom Post Type Widget For Genesis
  *
  * @package FeaturedCustomPostTypeWidgetForGenesis
- * @author 	StudioPress
- * @author 	Jo Waltham
+ * @author  StudioPress
+ * @author  Jo Waltham
  * @author  Pete Favelle
+ * @author  Robin Cornett
  * @license GPL-2.0+
  *
- */
-
- /**
- * Register Featured Custom Post Type Widget For Genesis
- *
- * @package FeaturedCustomPostTypeWidgetForGenesis
- * @author 	StudioPress
- * @author	Jo Waltham
- * @author  Pete Favelle
  */
 
  /**
@@ -323,7 +315,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 
 		// Fetch a list of possible post types
 		$args = array(
-			'public' => true,
+			'public'   => true,
 			'_builtin' => false,
 		);
 		$output = 'names';
@@ -331,7 +323,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		$post_type_list = get_post_types( $args, $output, $operator );
 
 		// Add posts to that post_type_list
-		$post_type_list[ 'post' ] = 'post';
+		$post_type_list['post'] = 'post';
 
 		// And a list of available taxonomies for the current post type
 		if ( 'any' == $instance['post_type'] ) {
@@ -342,7 +334,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 
 		// And from there, a list of available terms in that tax
 		$tax_args = array(
-			'hide_empty'	=> 0,
+			'hide_empty' => 0,
 		);
 		$tax_term_list = get_terms( $taxonomies, $tax_args );
 		usort( $tax_term_list, array( $this, 'tax_term_compare' ) );
