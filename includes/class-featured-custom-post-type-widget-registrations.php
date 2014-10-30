@@ -3,29 +3,21 @@
  * Featured Custom Post Type Widget For Genesis
  *
  * @package FeaturedCustomPostTypeWidgetForGenesis
- * @author 	StudioPress
- * @author 	Jo Waltham
+ * @author  StudioPress
+ * @author  Jo Waltham
  * @author  Pete Favelle
+ * @author  Robin Cornett
  * @license GPL-2.0+
  *
  */
- 
- /**
- * Register Featured Custom Post Type Widget For Genesis
- * 
- * @package FeaturedCustomPostTypeWidgetForGenesis
- * @author 	StudioPress
- * @author	Jo Waltham
- * @author  Pete Favelle
- */
- 
+
  /**
 * Please note that most of this code is from the Genesis Featured Post Widget included in the Genesis Framework.
 * I have just added support for Custom Post Types.
 * Pete has added support for Custom Taxonomies.
 */
 
- 
+
 class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 
 	/**
@@ -43,7 +35,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 	function __construct() {
 
 		$this->defaults = array(
-			'title'                   => '',	
+			'title'                   => '',
 			'post_type'               => 'post',
 			'tax_term'                => '',
 			'posts_num'               => 1,
@@ -67,6 +59,8 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 			'extra_title'             => '',
 			'more_from_category'      => '',
 			'more_from_category_text' => __( 'More Posts from this Category', 'genesis-featured-custom-post-type-widget' ),
+			'archive_link'            => '',
+			'archive_text'            => __( 'View Custom Post Type Archive', 'genesis-featured-custom-post-type-widget' ),
 		);
 
 		$widget_ops = array(
@@ -166,12 +160,12 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 				echo genesis_html5() ? '<header class="entry-header">' : '';
 
 				if ( ! empty( $instance['show_title'] ) ) {
-					
+
 					if ( genesis_html5() )
 						printf( '<h2 class="entry-title"><a href="%s" title="%s">%s</a></h2>', get_permalink(), the_title_attribute( 'echo=0' ), get_the_title() );
 					else
 						printf( '<h2><a href="%s" title="%s">%s</a></h2>', get_permalink(), the_title_attribute( 'echo=0' ), get_the_title() );
-				
+
 				}
 
 				if ( ! empty( $instance['show_byline'] ) && ! empty( $instance['post_info'] ) )
@@ -261,7 +255,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 			wp_reset_query();
 		}
 
-		if ( ! empty( $instance['more_from_category'] ) 
+		if ( ! empty( $instance['more_from_category'] )
 		&& ( 'category' == substr( $instance['tax_term'], 0, 8 ) ) ) {
 			$post_cat = get_cat_ID( substr( $instance['tax_term'], 9 ) );
 			printf(
@@ -270,6 +264,15 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 				esc_attr( get_cat_name( $post_cat ) ),
 				esc_html( $instance['more_from_category_text'] )
 			);
+		}
+
+		if ( ! empty( $instance['archive_link'] ) && ! empty( $instance['archive_text'] ) ) {
+			printf(
+				'<p class="more-from-category"><a href="%1$s">%2$s</a></p>',
+				get_post_type_archive_link( $instance['post_type'] ),
+				esc_html( $instance['archive_text'] )
+			);
+
 		}
 
 		echo $after_widget;
@@ -309,18 +312,18 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 
 		//* Merge with defaults
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
-		
+
 		// Fetch a list of possible post types
 		$args = array(
-			'public' => true,
+			'public'   => true,
 			'_builtin' => false,
 		);
 		$output = 'names';
 		$operator = 'and';
 		$post_type_list = get_post_types( $args, $output, $operator );
-		
-		// Add posts to that post_type_list	
-		$post_type_list[ 'post' ] = 'post';
+
+		// Add posts to that post_type_list
+		$post_type_list['post'] = 'post';
 
 		// And a list of available taxonomies for the current post type
 		if ( 'any' == $instance['post_type'] ) {
@@ -330,8 +333,8 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		}
 
 		// And from there, a list of available terms in that tax
-		$tax_args = array( 
-			'hide_empty'	=> 0,
+		$tax_args = array(
+			'hide_empty' => 0,
 		);
 		$tax_term_list = get_terms( $taxonomies, $tax_args );
 		usort( $tax_term_list, array( $this, 'tax_term_compare' ) );
@@ -345,20 +348,20 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		<div class="genesis-widget-column">
 
 			<div class="genesis-widget-column-box genesis-widget-column-box-top">
-			
+
 				<p>
 					<label for="<?php echo $this->get_field_id( 'post_type' ); ?>"><?php _e( 'Post Type', 'genesis-featured-custom-post-type-widget' ); ?>:</label>
 					<select id="<?php echo $this->get_field_id( 'post_type' ); ?>" name="<?php echo $this->get_field_name( 'post_type' ); ?>" onchange="tax_term_postback('<?php echo $this->get_field_id( 'tax_term' ); ?>', this.value);" >
 
 						<?php
-						foreach ( $post_type_list as $post_type_item ) 
-							echo '<option style="padding-right:10px;" value="'. esc_attr( $post_type_item ) .'" '. selected( esc_attr( $post_type_item ), $instance['post_type'], false ) .'>'. esc_attr( $post_type_item ) .'</option>'; 
+						foreach ( $post_type_list as $post_type_item )
+							echo '<option style="padding-right:10px;" value="'. esc_attr( $post_type_item ) .'" '. selected( esc_attr( $post_type_item ), $instance['post_type'], false ) .'>'. esc_attr( $post_type_item ) .'</option>';
 
-						echo '<option style="padding-right:10px;" value="any" '. selected( 'any', $instance['post_type'], false ) .'>'. __( 'any', 'genesis-featured-custom-post-type-widget' ) .'</option>'; 
-						?>			
+						echo '<option style="padding-right:10px;" value="any" '. selected( 'any', $instance['post_type'], false ) .'>'. __( 'any', 'genesis-featured-custom-post-type-widget' ) .'</option>';
+						?>
 					</select>
 				</p>
-			
+
 				<p>
 					<label for="<?php echo $this->get_field_id( 'tax_term' ); ?>"><?php _e( 'Category/Term', 'genesis-featured-custom-post-type-widget' ); ?>:</label>
 					<select id="<?php echo $this->get_field_id( 'tax_term' ); ?>" name="<?php echo $this->get_field_name( 'tax_term' ); ?>">
@@ -367,11 +370,11 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 						foreach ( $tax_term_list as $tax_term_item ) {
 							$tax_term_desc = $tax_term_item->taxonomy . '/' . $tax_term_item->name;
 							$tax_term_slug = $tax_term_item->taxonomy . '/' . $tax_term_item->slug;
-							echo '<option style="padding-right:10px;" value="'. esc_attr( $tax_term_slug ) .'" '. selected( esc_attr( $tax_term_slug ), $instance['tax_term'], false ) .'>'. esc_attr( $tax_term_desc ) .'</option>'; 
+							echo '<option style="padding-right:10px;" value="'. esc_attr( $tax_term_slug ) .'" '. selected( esc_attr( $tax_term_slug ), $instance['tax_term'], false ) .'>'. esc_attr( $tax_term_desc ) .'</option>';
 						}
 
-						echo '<option style="padding-right:10px;" value="any" '. selected( 'any', $instance['tax_term'], false ) .'>'. __( 'any', 'genesis-featured-custom-post-type-widget' ) .'</option>'; 
-						?>			
+						echo '<option style="padding-right:10px;" value="any" '. selected( 'any', $instance['tax_term'], false ) .'>'. __( 'any', 'genesis-featured-custom-post-type-widget' ) .'</option>';
+						?>
 					</select>
 				</p>
 
@@ -451,9 +454,8 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 				<p>
 					<label for="<?php echo $this->get_field_id( 'image_size' ); ?>"><?php _e( 'Image Size', 'genesis-featured-custom-post-type-widget' ); ?>:</label>
 					<select id="<?php echo $this->get_field_id( 'image_size' ); ?>" class="genesis-image-size-selector" name="<?php echo $this->get_field_name( 'image_size' ); ?>">
-						<option value="thumbnail">thumbnail (<?php echo get_option( 'thumbnail_size_w' ); ?>x<?php echo get_option( 'thumbnail_size_h' ); ?>)</option>
 						<?php
-						$sizes = genesis_get_additional_image_sizes();
+						$sizes = genesis_get_image_sizes();
 						foreach( (array) $sizes as $name => $size )
 							echo '<option value="'.esc_attr( $name ).'" '.selected( $name, $instance['image_size'], FALSE ).'>'.esc_html( $name ).' ( '.$size['width'].'x'.$size['height'].' )</option>';
 						?>
@@ -539,6 +541,15 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 					<input type="text" id="<?php echo $this->get_field_id( 'more_from_category_text' ); ?>" name="<?php echo $this->get_field_name( 'more_from_category_text' ); ?>" value="<?php echo esc_attr( $instance['more_from_category_text'] ); ?>" class="widefat" />
 				</p>
 
+				<p>
+					<input id="<?php echo $this->get_field_id( 'archive_link' ); ?>" type="checkbox" name="<?php echo $this->get_field_name( 'archive_link' ); ?>" value="1" <?php checked( $instance['archive_link'] ); ?>/>
+					<label for="<?php echo $this->get_field_id( 'archive_link' ); ?>"><?php _e( 'Show Archive Link', 'genesis-featured-sermon-widget' ); ?></label>
+				</p>
+				<p>
+					<label for="<?php echo $this->get_field_id( 'archive_text' ); ?>"><?php _e( 'Link Text', 'genesis-featured-custom-post-type-widget' ); ?>:</label>
+					<input type="text" id="<?php echo $this->get_field_id( 'archive_text' ); ?>" name="<?php echo $this->get_field_name( 'archive_text' ); ?>" value="<?php echo esc_attr( $instance['archive_text'] ); ?>" class="widefat" />
+				</p>
+
 			</div>
 
 		</div>
@@ -562,9 +573,12 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 	 * Enqueues the small bit of Javascript which will handle the Ajax
 	 * callback to correctly populate the custom term dropdown.
 	 */
-	function admin_enqueue( $hook ) {
-		wp_enqueue_script( 'tax-term-ajax-script', plugins_url( '/ajax_handler.js', __FILE__ ), array('jquery') );
-	  wp_localize_script( 'tax-term-ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+	function admin_enqueue() {
+		$screen = get_current_screen()->id;
+		if ( $screen === 'widgets' || $screen === 'customize' ) {
+			wp_enqueue_script( 'tax-term-ajax-script', plugins_url( '/ajax_handler.js', __FILE__ ), array('jquery') );
+			wp_localize_script( 'tax-term-ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+		}
 	}
 
 	/**
@@ -582,7 +596,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		}
 
 		// And from there, a list of available terms in that tax
-		$tax_args = array( 
+		$tax_args = array(
 			'hide_empty'	=> 0,
 		);
 		$tax_term_list = get_terms( $taxonomies, $tax_args );
@@ -599,4 +613,3 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		die();
 	}
 }
-

@@ -2,7 +2,7 @@
 
 WordPress plugin that adds a widget to display Featured Custom Post Types for the Genesis Framework
 
-## Description 
+## Description
 
 WordPress plugin that adds a widget to display Featured Custom Post Types for the Genesis Framework. Supports Custom Taxonomies.
 
@@ -12,6 +12,7 @@ Genesis 2.0+
 
 ## Credits
 Most of the code in this plugin is from the <a href="http://www.studiopress.com/">StudioPress</a> Genesis Featured Post Widget and I've just added Custom Post Type Support.
+
 Thanks to <a href="https://github.com/ahnlak">Pete Favelle</a> for adding Custom Taxonomy support.
 
 ## Installation
@@ -39,3 +40,17 @@ Using git, browse to your /wp-content/plugins/ directory and clone this reposito
 git clone git@github.com:calliaweb/genesis-featured-custom-post-type-widget.git
 
 Then go to your Plugins screen and click Activate.
+
+### Credits
+* [Jo Waltham](http://calliaweb.co.uk/)
+* with help from [Pete Favelle](https://github.com/ahnlak)
+* and [Robin Cornett](http://robincornett.com)
+
+### Changelog
+
+#### 1.2.0
+* new option for CPT archive link
+* set ajax to load conditionally
+
+#### 1.0.0
+* initial release on GH
