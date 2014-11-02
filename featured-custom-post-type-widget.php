@@ -23,7 +23,25 @@ if ( ! defined('WPINC' ) ) {
 	die;
 }
 
- // Register the widget
+add_action( 'init', 'gfcptw_init' );
+function gfcptw_init() {
+	if ( 'genesis' !== basename( get_template_directory() ) ) {
+		add_action( 'admin_init', 'gfcptw_deactivate' );
+		add_action( 'admin_notices', 'gfcptw_notice' );
+		return;
+	}
+
+}
+
+function gfcptw_deactivate() {
+	deactivate_plugins( plugin_basename( __FILE__ ) );
+}
+
+function gfcptw_notice() {
+	echo '<div class="error"><p><strong>Featured Custom Post Type Widget For Genesis</strong> works only with the Genesis Framework. It has been <strong>deactivated</strong>.</p></div>';
+}
+
+// Register the widget
 add_action( 'widgets_init', 'gfcptw_register_widget' );
 function gfcptw_register_widget() {
 	register_widget( 'Genesis_Featured_Custom_Post_Type' );
