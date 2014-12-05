@@ -46,7 +46,7 @@ Then go to your Plugins screen and click Activate.
 If you are having styling issues with the columns, try adding this to your stylesheet:
 
 ```css
-.sidebar .widget {
+.widget {
 	overflow: hidden;
 }
 ```
