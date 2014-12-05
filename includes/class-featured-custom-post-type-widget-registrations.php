@@ -154,7 +154,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 			}
 
 			genesis_markup( array(
-				'html5'   => '<div class="' . $column_class . '"><article>',
+				'html5'   => '<div class="' . $column_class . '"><article %s>',
 				'xhtml'   => sprintf( '<div class="%s ' . $column_class . '">', implode( ' ', get_post_class() ) ),
 				'context' => 'entry',
 			) );
