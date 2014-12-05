@@ -41,6 +41,16 @@ git clone git@github.com:calliaweb/genesis-featured-custom-post-type-widget.git
 
 Then go to your Plugins screen and click Activate.
 
+## Frequently Asked Questions
+
+If you are having styling issues with the columns, try adding this to your stylesheet:
+
+```css
+.sidebar .widget {
+	overflow: hidden;
+}
+```
+
 ### Credits
 * [Jo Waltham](http://calliaweb.co.uk/)
 * with help from [Pete Favelle](https://github.com/ahnlak)

@@ -17,7 +17,6 @@
 * Pete has added support for Custom Taxonomies.
 */
 
-
 class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 
 	/**
@@ -42,6 +41,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 			'posts_offset'            => 0,
 			'orderby'                 => '',
 			'order'                   => '',
+			'columns'                 => 'full',
 			'exclude_displayed'       => 0,
 			'show_image'              => 0,
 			'image_alignment'         => '',
@@ -79,6 +79,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		// Register our Ajax handler
 		add_action( 'wp_ajax_tax_term_action', array( $this, 'tax_term_action_callback' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
+
 	}
 
 	/**
@@ -130,13 +131,31 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 
 		$wp_query = new WP_Query( $query_args );
 
+		$i = 0;
+
 		if ( have_posts() ) : while ( have_posts() ) : the_post();
 
 			$_genesis_displayed_ids[] = get_the_ID();
 
+			$column_class = $instance['columns'];
+			$count        = 1;
+			if ( 'one-half' === $instance['columns'] ) {
+				$count = 2;
+			} elseif ( 'one-third' === $instance['columns'] ) {
+				$count = 3;
+			} elseif ( 'one-fourth' === $instance['columns'] ) {
+				$count = 4;
+			} elseif ( 'one-sixth' === $instance['columns'] ) {
+				$count = 6;
+			}
+
+			if ( $i++ % $count === 0 ) {
+				$column_class = $instance['columns'] . ' first';
+			}
+
 			genesis_markup( array(
-				'html5'   => '<article %s>',
-				'xhtml'   => sprintf( '<div class="%s">', implode( ' ', get_post_class() ) ),
+				'html5'   => '<div class="' . $column_class . '"><article>',
+				'xhtml'   => sprintf( '<div class="%s ' . $column_class . '">', implode( ' ', get_post_class() ) ),
 				'context' => 'entry',
 			) );
 
@@ -202,7 +221,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 			}
 
 			genesis_markup( array(
-				'html5' => '</article>',
+				'html5' => '</article></div>',
 				'xhtml' => '</div>',
 			) );
 
@@ -413,6 +432,17 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 					<label for="<?php echo $this->get_field_id( 'exclude_displayed' ); ?>"><?php _e( 'Exclude Previously Displayed Posts?', 'genesis-featured-custom-post-type-widget' ); ?></label>
 				</p>
 
+				<p>
+					<label for="<?php echo $this->get_field_id( 'columns' ); ?>"><?php _e( 'Number of Columns', 'sawrie-cpt' ); ?>:</label>
+					<select id="<?php echo $this->get_field_id( 'columns' ); ?>" name="<?php echo $this->get_field_name( 'columns' ); ?>">
+						<option value="full" <?php selected( 'full', $instance['columns'] ); ?>>1</option>
+						<option value="one-half" <?php selected( 'one-half', $instance['columns'] ); ?>>2</option>
+						<option value="one-third" <?php selected( 'one-third', $instance['columns'] ); ?>>3</option>
+						<option value="one-fourth" <?php selected( 'one-fourth', $instance['columns'] ); ?>>4</option>
+						<option value="one-sixth" <?php selected( 'one-sixth', $instance['columns'] ); ?>>6</option>
+					</select>
+				</p>
+
 			</div>
 
 			<div class="genesis-widget-column-box">
@@ -612,4 +642,5 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		echo json_encode( $taxes );
 		die();
 	}
+
 }
