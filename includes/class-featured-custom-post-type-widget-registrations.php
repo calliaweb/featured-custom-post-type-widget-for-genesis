@@ -129,33 +129,19 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		if ( $instance['exclude_displayed'] )
 			$query_args['post__not_in'] = (array) $_genesis_displayed_ids;
 
-		$wp_query = new WP_Query( $query_args );
+		if ( 'full' !== $instance['columns'] ) {
+			add_filter( 'post_class', array( $this, 'add_post_class_' . $instance['columns'] ) );
+		}
 
-		$i = 0;
+		$wp_query = new WP_Query( $query_args );
 
 		if ( have_posts() ) : while ( have_posts() ) : the_post();
 
 			$_genesis_displayed_ids[] = get_the_ID();
 
-			$column_class = $instance['columns'];
-			$count        = 1;
-			if ( 'one-half' === $instance['columns'] ) {
-				$count = 2;
-			} elseif ( 'one-third' === $instance['columns'] ) {
-				$count = 3;
-			} elseif ( 'one-fourth' === $instance['columns'] ) {
-				$count = 4;
-			} elseif ( 'one-sixth' === $instance['columns'] ) {
-				$count = 6;
-			}
-
-			if ( $i++ % $count === 0 ) {
-				$column_class = $instance['columns'] . ' first';
-			}
-
 			genesis_markup( array(
-				'html5'   => '<div class="' . $column_class . '"><article %s>',
-				'xhtml'   => sprintf( '<div class="%s ' . $column_class . '">', implode( ' ', get_post_class() ) ),
+				'html5'   => '<article %s>',
+				'xhtml'   => sprintf( '<div class="%s">', implode( ' ', get_post_class() ) ),
 				'context' => 'entry',
 			) );
 
@@ -221,11 +207,15 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 			}
 
 			genesis_markup( array(
-				'html5' => '</article></div>',
+				'html5' => '</article>',
 				'xhtml' => '</div>',
 			) );
 
 		endwhile; endif;
+
+		if ( 'full' !== $instance['columns'] ) {
+			remove_filter( 'post_class', array( $this, 'add_post_class_' . $instance['columns'] ) );
+		}
 
 		//* Restore original query
 		wp_reset_query();
@@ -436,10 +426,10 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 					<label for="<?php echo $this->get_field_id( 'columns' ); ?>"><?php _e( 'Number of Columns', 'sawrie-cpt' ); ?>:</label>
 					<select id="<?php echo $this->get_field_id( 'columns' ); ?>" name="<?php echo $this->get_field_name( 'columns' ); ?>">
 						<option value="full" <?php selected( 'full', $instance['columns'] ); ?>>1</option>
-						<option value="one-half" <?php selected( 'one-half', $instance['columns'] ); ?>>2</option>
-						<option value="one-third" <?php selected( 'one-third', $instance['columns'] ); ?>>3</option>
-						<option value="one-fourth" <?php selected( 'one-fourth', $instance['columns'] ); ?>>4</option>
-						<option value="one-sixth" <?php selected( 'one-sixth', $instance['columns'] ); ?>>6</option>
+						<option value="one_half" <?php selected( 'one_half', $instance['columns'] ); ?>>2</option>
+						<option value="one_third" <?php selected( 'one_third', $instance['columns'] ); ?>>3</option>
+						<option value="one_fourth" <?php selected( 'one_fourth', $instance['columns'] ); ?>>4</option>
+						<option value="one_sixth" <?php selected( 'one_sixth', $instance['columns'] ); ?>>6</option>
 					</select>
 				</p>
 
@@ -641,6 +631,90 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		// And emit it
 		echo json_encode( $taxes );
 		die();
+	}
+
+	function add_column_classes( $classes, $columns ) {
+		global $wp_query;
+
+		//* Bail if we don't have a column number or the one we do have is invalid.
+		if ( ! isset( $columns ) || ! in_array( $columns, array( 2, 3, 4, 6 ) ) ) {
+			return;
+		}
+
+		$classes = array();
+
+		$column_classes = array(
+			2 => 'one-half',
+			3 => 'one-third',
+			4 => 'one-fourth',
+			6 => 'one-sixth'
+		);
+
+		//* Add the appropriate column class.
+		$classes[] = $column_classes[absint($columns)];
+
+		//* Add an "odd" class to allow for more control of grid clollapse.
+		if ( ( $wp_query->current_post + 1 ) % 2 ) {
+			$classes[] = 'odd';
+		}
+
+		if ( 0 === $wp_query->current_post || 0 === $wp_query->current_post % $columns ) {
+			$classes[] = 'first';
+		}
+
+		return $classes;
+	}
+
+	/**
+	 * Set up a grid of one-half elements for use in a post_class filter.
+	 *
+	 * @since      x.y.z
+	 * @category   Grid Loop
+	 * @param      $classes array An array of the current post classes
+	 * @return     $classes array The current post classes with the grid appended
+	 * @author     Rob Neu
+	 */
+	function add_post_class_one_half( $classes ) {
+		return array_merge( (array) $this->add_column_classes( $classes, 2 ), $classes );
+	}
+
+	/**
+	 * Set up a grid of one-third elements for use in a post_class filter.
+	 *
+	 * @since      x.y.z
+	 * @category   Grid Loop
+	 * @param      $classes array An array of the current post classes
+	 * @return     $classes array The current post classes with the grid appended
+	 * @author     Rob Neu
+	 */
+	function add_post_class_one_third( $classes ) {
+		return array_merge( (array) $this->add_column_classes( $classes, 3 ), $classes );
+	}
+
+	/**
+	 * Set up a grid of one-fourth elements for use in a post_class filter.
+	 *
+	 * @since      x.y.z
+	 * @category   Grid Loop
+	 * @param      $classes array An array of the current post classes
+	 * @return     $classes array The current post classes with the grid appended
+	 * @author     Rob Neu
+	 */
+	function add_post_class_one_fourth( $classes ) {
+		return array_merge( (array) $this->add_column_classes( $classes, 4 ), $classes );
+	}
+
+	/**
+	 * Set up a grid of one-sixth elements for use in a post_class filter.
+	 *
+	 * @since      x.y.z
+	 * @category   Grid Loop
+	 * @param      $classes array An array of the current post classes
+	 * @return     $classes array The current post classes with the grid appended
+	 * @author     Rob Neu
+	 */
+	function add_post_class_one_sixth( $classes ) {
+		return array_merge( (array) $this->add_column_classes( $classes, 6 ), $classes );
 	}
 
 }
