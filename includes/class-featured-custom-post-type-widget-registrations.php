@@ -651,6 +651,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		);
 
 		//* Add the appropriate column class.
+		$classes[] = 'grid';
 		$classes[] = $column_classes[absint($columns)];
 
 		//* Add an "odd" class to allow for more control of grid clollapse.
