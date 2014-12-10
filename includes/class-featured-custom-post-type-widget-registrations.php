@@ -376,13 +376,13 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 					<select id="<?php echo $this->get_field_id( 'tax_term' ); ?>" name="<?php echo $this->get_field_name( 'tax_term' ); ?>">
 
 						<?php
+						echo '<option style="padding-right:10px;" value="any" '. selected( 'any', $instance['tax_term'], false ) .'>'. __( 'any', 'genesis-featured-custom-post-type-widget' ) .'</option>';
 						foreach ( $tax_term_list as $tax_term_item ) {
 							$tax_term_desc = $tax_term_item->taxonomy . '/' . $tax_term_item->name;
 							$tax_term_slug = $tax_term_item->taxonomy . '/' . $tax_term_item->slug;
 							echo '<option style="padding-right:10px;" value="'. esc_attr( $tax_term_slug ) .'" '. selected( esc_attr( $tax_term_slug ), $instance['tax_term'], false ) .'>'. esc_attr( $tax_term_desc ) .'</option>';
 						}
 
-						echo '<option style="padding-right:10px;" value="any" '. selected( 'any', $instance['tax_term'], false ) .'>'. __( 'any', 'genesis-featured-custom-post-type-widget' ) .'</option>';
 						?>
 					</select>
 				</p>
@@ -622,11 +622,11 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		$tax_term_list = get_terms( $taxonomies, $tax_args );
 
 		// Build an appropriate JSON response containing this info
+		$taxes['any'] = 'any';
 		foreach ( $tax_term_list as $tax_term_item ) {
 			$taxes [$tax_term_item->taxonomy . '/' . $tax_term_item->slug] =
 				$tax_term_item->taxonomy . '/' . $tax_term_item->name;
 		}
-		$taxes['any'] = 'any';
 
 		// And emit it
 		echo json_encode( $taxes );
