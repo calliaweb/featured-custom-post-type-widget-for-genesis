@@ -595,7 +595,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 	 */
 	function admin_enqueue() {
 		$screen = get_current_screen()->id;
-		if ( $screen === 'widgets' || $screen === 'customize' ) {
+		if ( in_array( $screen, array( 'widgets', 'customize' ) ) ) {
 			wp_enqueue_script( 'tax-term-ajax-script', plugins_url( '/ajax_handler.js', __FILE__ ), array('jquery') );
 			wp_localize_script( 'tax-term-ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
 		}
