@@ -15,8 +15,7 @@ function tax_term_postback( select_id, post_type ) {
 	select_ctrl.empty();
 	jQuery.each(terms, function(key, value) {
 		var new_option = jQuery('<option></option>')
-					    .attr('style', 'padding-right:10px;')
-					    .attr('value', key).text(value);
+		    .attr('value', key).text(value);
 		if (value == old_term) {
 			new_option.attr('selected', true);
 		}
