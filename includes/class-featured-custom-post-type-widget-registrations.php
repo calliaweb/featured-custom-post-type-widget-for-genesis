@@ -321,32 +321,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 
 		//* Merge with defaults
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
-
-		// Fetch a list of possible post types
-		$args = array(
-			'public'   => true,
-			'_builtin' => false,
-		);
-		$output = 'names';
-		$operator = 'and';
-		$post_type_list = get_post_types( $args, $output, $operator );
-
-		// Add posts to that post_type_list
-		$post_type_list['post'] = 'post';
-
-		// And a list of available taxonomies for the current post type
-		if ( 'any' == $instance['post_type'] ) {
-			$taxonomies = get_taxonomies();
-		} else {
-			$taxonomies = get_object_taxonomies( $instance['post_type'] );
-		}
-
-		// And from there, a list of available terms in that tax
-		$tax_args = array(
-			'hide_empty' => 0,
-		);
-		$tax_term_list = get_terms( $taxonomies, $tax_args );
-		usort( $tax_term_list, array( $this, 'tax_term_compare' ) );
+		$item     = $this->build_lists( $instance );
 
 		?>
 		<p>
@@ -363,10 +338,11 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 					<select id="<?php echo $this->get_field_id( 'post_type' ); ?>" name="<?php echo $this->get_field_name( 'post_type' ); ?>" onchange="tax_term_postback('<?php echo $this->get_field_id( 'tax_term' ); ?>', this.value);" >
 
 						<?php
-						foreach ( $post_type_list as $post_type_item )
-							echo '<option style="padding-right:10px;" value="'. esc_attr( $post_type_item ) .'" '. selected( esc_attr( $post_type_item ), $instance['post_type'], false ) .'>'. esc_attr( $post_type_item ) .'</option>';
+						echo '<option value="any" '. selected( 'any', $instance['post_type'], false ) .'>'. __( 'any', 'genesis-featured-custom-post-type-widget' ) .'</option>';
+						foreach ( $item->post_type_list as $post_type_item ) {
+							echo '<option value="'. esc_attr( $post_type_item ) .'" '. selected( esc_attr( $post_type_item ), $instance['post_type'], false ) .'>'. esc_attr( $post_type_item ) .'</option>';
+						}
 
-						echo '<option style="padding-right:10px;" value="any" '. selected( 'any', $instance['post_type'], false ) .'>'. __( 'any', 'genesis-featured-custom-post-type-widget' ) .'</option>';
 						?>
 					</select>
 				</p>
@@ -376,11 +352,11 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 					<select id="<?php echo $this->get_field_id( 'tax_term' ); ?>" name="<?php echo $this->get_field_name( 'tax_term' ); ?>">
 
 						<?php
-						echo '<option style="padding-right:10px;" value="any" '. selected( 'any', $instance['tax_term'], false ) .'>'. __( 'any', 'genesis-featured-custom-post-type-widget' ) .'</option>';
-						foreach ( $tax_term_list as $tax_term_item ) {
+						echo '<option value="any" '. selected( 'any', $instance['tax_term'], false ) .'>'. __( 'any', 'genesis-featured-custom-post-type-widget' ) .'</option>';
+						foreach ( $item->tax_term_list as $tax_term_item ) {
 							$tax_term_desc = $tax_term_item->taxonomy . '/' . $tax_term_item->name;
 							$tax_term_slug = $tax_term_item->taxonomy . '/' . $tax_term_item->slug;
-							echo '<option style="padding-right:10px;" value="'. esc_attr( $tax_term_slug ) .'" '. selected( esc_attr( $tax_term_slug ), $instance['tax_term'], false ) .'>'. esc_attr( $tax_term_desc ) .'</option>';
+							echo '<option value="'. esc_attr( $tax_term_slug ) .'" '. selected( esc_attr( $tax_term_slug ), $instance['tax_term'], false ) .'>'. esc_attr( $tax_term_desc ) .'</option>';
 						}
 
 						?>
@@ -578,15 +554,81 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 	}
 
 	/**
+	 * build post_type and taxonomy lists for widget form use
+	 * @param  [type] $instance [description]
+	 * @return $item           list of post_types and list of taxonomies
+	 */
+	function build_lists( $instance ) {
+
+		//* Merge with defaults
+		$instance = wp_parse_args( (array) $instance, $this->defaults );
+
+		$item = new stdClass();
+
+		//* Fetch a list of possible post types
+		$args = array(
+			'public'   => true,
+			'_builtin' => false,
+		);
+		$output = 'names';
+		$operator = 'and';
+		$item->post_type_list = get_post_types( $args, $output, $operator );
+
+		//* Add posts to that post_type_list
+		$item->post_type_list['post'] = 'post';
+
+		//* And a list of available taxonomies for the current post type
+		if ( 'any' == $instance['post_type'] ) {
+			$taxonomies = get_taxonomies();
+		} else {
+			$taxonomies = get_object_taxonomies( $instance['post_type'] );
+		}
+
+		//* And from there, a list of available terms in that tax
+		$tax_args = array(
+			'hide_empty' => 0,
+		);
+		$item->tax_term_list = get_terms( $taxonomies, $tax_args );
+		usort( $item->tax_term_list, array( $this, 'tax_term_compare' ) );
+
+		return $item;
+	}
+
+	/**
+	 * build list of taxonomies for ajax revised dropdown
+	 * @return $item list of taxonomies
+	 */
+	function build_ajax_list() {
+
+		$item = new stdClass;
+		//* Fetch a list of available taxonomies for the current post type
+		if ( 'any' == $_POST['post_type'] ) {
+			$taxonomies = get_taxonomies();
+		} else {
+			$taxonomies = get_object_taxonomies( $_POST['post_type'] );
+		}
+
+		//* And from there, a list of available terms in that tax
+		$tax_args = array(
+			'hide_empty' => 0,
+		);
+		$item->tax_term_list = get_terms( $taxonomies, $tax_args );
+		usort( $item->tax_term_list, array( $this, 'tax_term_compare' ) );
+
+		return $item;
+
+	}
+
+	/**
 	 * Comparison function to allow custom taxonomy terms to be displayed
 	 * alphabetically. Required because the display is a compound of term
 	 * *and* taxonomy.
 	 */
 	function tax_term_compare( $a, $b ) {
 		if ( $a->taxonomy == $b->taxonomy ) {
-			return ($a->name < $b->name) ? -1 : 1;
+			return ( $a->slug < $b->slug ) ? -1 : 1;
 		}
-		return ($a->taxonomy <  $b->taxonomy)? -1 : 1;
+		return ( $a->taxonomy <  $b->taxonomy )? -1 : 1;
 	}
 
 	/**
@@ -608,29 +650,19 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 	 */
 	function tax_term_action_callback() {
 
-		// Fetch a list of available taxonomies for the current post type
-		if ( 'any' == $_POST['post_type'] ) {
-			$taxonomies = get_taxonomies();
-		} else {
-			$taxonomies = get_object_taxonomies( $_POST['post_type'] );
-		}
+		$item = $this->build_ajax_list();
 
-		// And from there, a list of available terms in that tax
-		$tax_args = array(
-			'hide_empty'	=> 0,
-		);
-		$tax_term_list = get_terms( $taxonomies, $tax_args );
-
-		// Build an appropriate JSON response containing this info
+		//* Build an appropriate JSON response containing this info
 		$taxes['any'] = 'any';
-		foreach ( $tax_term_list as $tax_term_item ) {
-			$taxes [$tax_term_item->taxonomy . '/' . $tax_term_item->slug] =
+		foreach ( $item->tax_term_list as $tax_term_item ) {
+			$taxes[$tax_term_item->taxonomy . '/' . $tax_term_item->slug] =
 				$tax_term_item->taxonomy . '/' . $tax_term_item->name;
 		}
 
-		// And emit it
+		//* And emit it
 		echo json_encode( $taxes );
 		die();
+
 	}
 
 	function add_column_classes( $classes, $columns ) {
