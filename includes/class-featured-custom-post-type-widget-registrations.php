@@ -424,7 +424,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 						<option value="45" <?php selected( 45, $instance['gravatar_size'] ); ?>><?php _e( 'Small (45px)', 'featured-custom-post-type-widget-for-genesis' ); ?></option>
 						<option value="65" <?php selected( 65, $instance['gravatar_size'] ); ?>><?php _e( 'Medium (65px)', 'featured-custom-post-type-widget-for-genesis' ); ?></option>
 						<option value="85" <?php selected( 85, $instance['gravatar_size'] ); ?>><?php _e( 'Large (85px)', 'featured-custom-post-type-widget-for-genesis' ); ?></option>
-						<option value="125" <?php selected( 105, $instance['gravatar_size'] ); ?>><?php _e( 'Extra Large (125px)', 'featured-custom-post-type-widget-for-genesis' ); ?></option>
+						<option value="125" <?php selected( 125, $instance['gravatar_size'] ); ?>><?php _e( 'Extra Large (125px)', 'featured-custom-post-type-widget-for-genesis' ); ?></option>
 					</select>
 				</p>
 
