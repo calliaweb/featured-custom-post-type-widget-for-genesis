@@ -38,13 +38,25 @@ function gfcptw_deactivate() {
 }
 
 function gfcptw_notice() {
-	echo '<div class="error"><p><strong>Featured Custom Post Type Widget For Genesis</strong> works only with the Genesis Framework. It has been <strong>deactivated</strong>.</p></div>';
+	echo '<div class="error"><p>';
+	echo __( '<strong>Featured Custom Post Type Widget For Genesis</strong> works only with the Genesis Framework. It has been <strong>deactivated</strong>.', 'featured-custom-post-type-widget-for-genesis' );
+	echo '</p></div>';
 }
 
 // Register the widget
 add_action( 'widgets_init', 'gfcptw_register_widget' );
 function gfcptw_register_widget() {
 	register_widget( 'Genesis_Featured_Custom_Post_Type' );
+}
+
+add_action( 'plugins_loaded', 'gfcptw_load_textdomain' );
+/**
+ * Set up text domain for translations
+ *
+ * @since 2.0.0
+ */
+function gfcptw_load_textdomain() {
+	load_plugin_textdomain( 'featured-custom-post-type-widget-for-genesis', false, plugin_basename( __FILE__ ) . '/languages/' );
 }
 
 require plugin_dir_path( __FILE__ ) . 'includes/class-featured-custom-post-type-widget-registrations.php';

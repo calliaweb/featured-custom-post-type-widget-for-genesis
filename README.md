@@ -37,9 +37,19 @@ Check out the Codex for more information about [installing plugins manually](htt
 
 Using git, browse to your /wp-content/plugins/ directory and clone this repository:
 
-git clone git@github.com:calliaweb/genesis-featured-custom-post-type-widget.git
+git clone git@github.com:calliaweb/featured-custom-post-type-widget-for-genesis.git
 
 Then go to your Plugins screen and click Activate.
+
+## Frequently Asked Questions
+
+If you are having styling issues with the columns, try adding this to your stylesheet:
+
+```css
+.widget {
+	overflow: hidden;
+}
+```
 
 ### Credits
 * [Jo Waltham](http://calliaweb.co.uk/)
@@ -47,6 +57,10 @@ Then go to your Plugins screen and click Activate.
 * and [Robin Cornett](http://robincornett.com)
 
 ### Changelog
+
+#### 2.0.0
+* new feature: display posts in columns within the widget
+* bugfix: ajax list now sorts properly
 
 #### 1.2.0
 * new option for CPT archive link
