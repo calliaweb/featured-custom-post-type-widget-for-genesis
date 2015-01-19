@@ -15,6 +15,8 @@ Most of the code in this plugin is from the <a href="http://www.studiopress.com/
 
 Thanks to <a href="https://github.com/ahnlak">Pete Favelle</a> for adding Custom Taxonomy support.
 
+Thank you to <a href-"https://github.com/robincornett">Robin Cornett</a> for all 1.2 and 2.0 improvements and bug fixes.
+
 ## Installation
 
 ### Upload
