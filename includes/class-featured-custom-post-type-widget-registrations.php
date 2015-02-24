@@ -268,7 +268,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		&& ( 'category' == substr( $instance['tax_term'], 0, 8 ) ) ) {
 			$post_cat = get_cat_ID( substr( $instance['tax_term'], 9 ) );
 			printf(
-				'<a class="more-from-category" href="%1$s" title="%2$s">%3$s</a>',
+				'<p class="more-from-category"><a href="%1$s" title="%2$s">%3$s</a></p>',
 				esc_url( get_term_link( $post_term, $post_tax ) ),
 				esc_attr( $term_details->name ),
 				esc_html( $instance['more_from_category_text'] )
@@ -288,7 +288,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 			}
 
 			printf(
-				'<a class="more-from-category" href="%1$s">%2$s</a>',
+				'<p class="more-from-category"><a href="%1$s">%2$s</a></p>',
 				esc_url( $archive_url ),
 				esc_html( $instance['archive_text'] )
 			);
