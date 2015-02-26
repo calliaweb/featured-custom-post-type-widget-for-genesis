@@ -145,12 +145,12 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 				'context' => 'entry',
 			) );
 
-			$image = genesis_get_image( array(
+			$image = apply_filters( 'featured_custom_post_type_image', genesis_get_image( array(
 				'format'  => 'html',
 				'size'    => $instance['image_size'],
 				'context' => 'featured-post-widget',
 				'attr'    => genesis_parse_attr( 'entry-image-widget' ),
-			) );
+			) ) );
 
 			if ( $instance['show_image'] && $image )
 				printf( '<a href="%s" title="%s" class="%s">%s</a>', get_permalink(), the_title_attribute( 'echo=0' ), esc_attr( $instance['image_alignment'] ), $image );
