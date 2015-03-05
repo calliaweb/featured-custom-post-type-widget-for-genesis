@@ -671,7 +671,12 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		}
 
 		//* And emit it
-		echo json_encode( $taxes );
+		if ( function_exists( 'wp_json_encode' ) ) {
+			echo wp_json_encode( $taxes );
+		}
+		else {
+			echo json_encode( $taxes );
+		}
 		die();
 
 	}
