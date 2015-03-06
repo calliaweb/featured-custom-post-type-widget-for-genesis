@@ -509,7 +509,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 					</select>
 					<br />
 					<label for="<?php echo esc_attr( $this->get_field_id( 'content_limit' ) ); ?>"><?php _e( 'Limit content to', 'featured-custom-post-type-widget-for-genesis' ); ?>
-						<input type="text" id="<?php echo esc_attr( $this->get_field_id( 'image_alignment' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'content_limit' ) ); ?>" value="<?php echo esc_attr( intval( $instance['content_limit'] ) ); ?>" size="3" />
+						<input type="text" id="<?php echo esc_attr( $this->get_field_id( 'content_limit' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'content_limit' ) ); ?>" value="<?php echo esc_attr( intval( $instance['content_limit'] ) ); ?>" size="3" />
 						<?php _e( 'characters', 'featured-custom-post-type-widget-for-genesis' ); ?>
 					</label>
 				</p>
