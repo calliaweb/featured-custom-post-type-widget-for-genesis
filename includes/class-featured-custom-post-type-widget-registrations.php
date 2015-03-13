@@ -254,8 +254,10 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 				while ( have_posts() ) {
 					the_post();
 					$_genesis_displayed_ids[] = get_the_ID();
-					$extra_title = sprintf( '<li><a href="%s" title="%s">%s</a></li>', get_permalink(), the_title_attribute( 'echo=0' ), get_the_title() );
+					$extra_title = sprintf( '<a href="%s">%s</a>', get_permalink(), get_the_title() );
+					$listitems  .= '<li>';
 					$listitems  .= apply_filters( 'featured_custom_post_type_extra_title', $extra_title );
+					$listitems  .= '</li>';
 				}
 
 				if ( mb_strlen( $listitems ) > 0 )
