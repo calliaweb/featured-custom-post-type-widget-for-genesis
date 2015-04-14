@@ -114,7 +114,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		);
 
 		// Extract the custom tax term, if provided
-		if ( 'any' != $instance['tax_term'] ) {
+		if ( 'any' !== $instance['tax_term'] ) {
 			list( $post_tax, $post_term ) = explode( '/', $instance['tax_term'], 2 );
 			$query_args['tax_query'] = array(
 				array(
@@ -244,7 +244,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 						'terms'    => $post_term,
 					)
 				);
-			 }
+			}
 
 			$wp_query = new WP_Query( $query_args );
 
@@ -268,13 +268,13 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 			wp_reset_query();
 		}
 
-		if ( ! empty( $instance['more_from_category'] )
-		&& ( 'category' == substr( $instance['tax_term'], 0, 8 ) ) ) {
-			$post_cat = get_cat_ID( substr( $instance['tax_term'], 9 ) );
+		if ( ! empty( $instance['more_from_category'] ) && ! empty( $instance['more_from_category_text'] ) && 'any' !== $instance['tax_term'] ) {
+
+			list( $post_tax, $post_term ) = explode( '/', $instance['tax_term'], 2 );
+
 			printf(
-				'<p class="more-from-category"><a href="%1$s" title="%2$s">%3$s</a></p>',
+				'<p class="more-from-category"><a href="%1$s">%2$s</a></p>',
 				esc_url( get_term_link( $post_term, $post_tax ) ),
-				esc_attr( $term_details->name ),
 				esc_html( $instance['more_from_category_text'] )
 			);
 		}
