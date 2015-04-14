@@ -56,7 +56,7 @@ add_action( 'plugins_loaded', 'gfcptw_load_textdomain' );
  * @since 2.0.0
  */
 function gfcptw_load_textdomain() {
-	load_plugin_textdomain( 'featured-custom-post-type-widget-for-genesis', false, plugin_basename( __FILE__ ) . '/languages/' );
+	load_plugin_textdomain( 'featured-custom-post-type-widget-for-genesis', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 }
 
 require plugin_dir_path( __FILE__ ) . 'includes/class-featured-custom-post-type-widget-registrations.php';
