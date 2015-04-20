@@ -70,6 +70,12 @@ Thank you to <a href="https://github.com/robincornett">Robin Cornett</a> for all
 
 ### Changelog
 
+#### 2.1.0
+* added filter for featured post image
+* added filter for extra posts list
+* bugfix: term archive link works for any term, not just categories
+* bugfix: post type archive link works for posts in addition to custom post types
+
 #### 2.0.0
 * new feature: display posts in columns within the widget
 * bugfix: ajax list now sorts properly
