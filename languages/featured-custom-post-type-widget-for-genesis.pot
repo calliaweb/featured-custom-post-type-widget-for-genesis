@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Featured Custom Post Type Widget for Genesis 2.0.0\n"
-"POT-Creation-Date: 2015-01-11 15:32-0500\n"
-"PO-Revision-Date: 2015-01-11 15:34-0500\n"
-"Last-Translator: Robin Cornett <hello@robincornett.com>\n"
+"POT-Creation-Date: 2015-04-14 18:31-0500\n"
+"PO-Revision-Date: 2015-04-14 18:31-0500\n"
+"Last-Translator: Robin Cornett Creative, LLC <hello@robincornett.com>\n"
 "Language-Team: Robin Cornett <hello@robincornett.com>\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
@@ -49,196 +49,196 @@ msgstr ""
 msgid "Featured Custom Post Types for Genesis"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:328
-#: includes/class-featured-custom-post-type-widget-registrations.php:517
+#: includes/class-featured-custom-post-type-widget-registrations.php:343
+#: includes/class-featured-custom-post-type-widget-registrations.php:532
 msgid "Title:"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:337
+#: includes/class-featured-custom-post-type-widget-registrations.php:352
 msgid "Post Type:"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:341
-#: includes/class-featured-custom-post-type-widget-registrations.php:355
+#: includes/class-featured-custom-post-type-widget-registrations.php:356
+#: includes/class-featured-custom-post-type-widget-registrations.php:370
 msgid "any"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:351
+#: includes/class-featured-custom-post-type-widget-registrations.php:366
 msgid "Category/Term:"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:367
-#: includes/class-featured-custom-post-type-widget-registrations.php:522
+#: includes/class-featured-custom-post-type-widget-registrations.php:382
+#: includes/class-featured-custom-post-type-widget-registrations.php:537
 msgid "Number of Posts to Show:"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:372
+#: includes/class-featured-custom-post-type-widget-registrations.php:387
 msgid "Number of Posts to Offset:"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:377
+#: includes/class-featured-custom-post-type-widget-registrations.php:392
 msgid "Order By:"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:379
+#: includes/class-featured-custom-post-type-widget-registrations.php:394
 msgid "Date"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:380
+#: includes/class-featured-custom-post-type-widget-registrations.php:395
 msgid "Title"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:381
+#: includes/class-featured-custom-post-type-widget-registrations.php:396
 msgid "Parent"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:382
+#: includes/class-featured-custom-post-type-widget-registrations.php:397
 msgid "ID"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:383
+#: includes/class-featured-custom-post-type-widget-registrations.php:398
 msgid "Comment Count"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:384
+#: includes/class-featured-custom-post-type-widget-registrations.php:399
 msgid "Random"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:389
+#: includes/class-featured-custom-post-type-widget-registrations.php:404
 msgid "Sort Order:"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:391
+#: includes/class-featured-custom-post-type-widget-registrations.php:406
 msgid "Descending (3, 2, 1)"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:392
+#: includes/class-featured-custom-post-type-widget-registrations.php:407
 msgid "Ascending (1, 2, 3)"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:398
+#: includes/class-featured-custom-post-type-widget-registrations.php:413
 msgid "Exclude Previously Displayed Posts?"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:402
+#: includes/class-featured-custom-post-type-widget-registrations.php:417
 msgid "Number of Columns:"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:418
+#: includes/class-featured-custom-post-type-widget-registrations.php:433
 msgid "Show Author Gravatar"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:422
+#: includes/class-featured-custom-post-type-widget-registrations.php:437
 msgid "Gravatar Size:"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:424
+#: includes/class-featured-custom-post-type-widget-registrations.php:439
 msgid "Small (45px)"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:425
+#: includes/class-featured-custom-post-type-widget-registrations.php:440
 msgid "Medium (65px)"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:426
+#: includes/class-featured-custom-post-type-widget-registrations.php:441
 msgid "Large (85px)"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:427
+#: includes/class-featured-custom-post-type-widget-registrations.php:442
 msgid "Extra Large (125px)"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:432
+#: includes/class-featured-custom-post-type-widget-registrations.php:447
 msgid "Gravatar Alignment:"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:434
-#: includes/class-featured-custom-post-type-widget-registrations.php:464
+#: includes/class-featured-custom-post-type-widget-registrations.php:449
+#: includes/class-featured-custom-post-type-widget-registrations.php:479
 msgid "None"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:435
-#: includes/class-featured-custom-post-type-widget-registrations.php:465
+#: includes/class-featured-custom-post-type-widget-registrations.php:450
+#: includes/class-featured-custom-post-type-widget-registrations.php:480
 msgid "Left"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:436
-#: includes/class-featured-custom-post-type-widget-registrations.php:466
+#: includes/class-featured-custom-post-type-widget-registrations.php:451
+#: includes/class-featured-custom-post-type-widget-registrations.php:481
 msgid "Right"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:437
-#: includes/class-featured-custom-post-type-widget-registrations.php:467
+#: includes/class-featured-custom-post-type-widget-registrations.php:452
+#: includes/class-featured-custom-post-type-widget-registrations.php:482
 msgid "Center"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:447
+#: includes/class-featured-custom-post-type-widget-registrations.php:462
 msgid "Show Featured Image"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:451
+#: includes/class-featured-custom-post-type-widget-registrations.php:466
 msgid "Image Size:"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:462
+#: includes/class-featured-custom-post-type-widget-registrations.php:477
 msgid "Image Alignment:"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:481
+#: includes/class-featured-custom-post-type-widget-registrations.php:496
 msgid "Show Post Title"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:486
+#: includes/class-featured-custom-post-type-widget-registrations.php:501
 msgid "Show Post Info"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:491
+#: includes/class-featured-custom-post-type-widget-registrations.php:506
 msgid "Content Type:"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:493
+#: includes/class-featured-custom-post-type-widget-registrations.php:508
 msgid "Show Content"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:494
+#: includes/class-featured-custom-post-type-widget-registrations.php:509
 msgid "Show Excerpt"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:495
+#: includes/class-featured-custom-post-type-widget-registrations.php:510
 msgid "Show Content Limit"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:496
+#: includes/class-featured-custom-post-type-widget-registrations.php:511
 msgid "No Content"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:499
+#: includes/class-featured-custom-post-type-widget-registrations.php:514
 msgid "Limit content to"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:501
+#: includes/class-featured-custom-post-type-widget-registrations.php:516
 msgid "characters"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:506
+#: includes/class-featured-custom-post-type-widget-registrations.php:521
 msgid "More Text (if applicable):"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:514
+#: includes/class-featured-custom-post-type-widget-registrations.php:529
 msgid ""
 "To display an unordered list of more posts from this category, please fill "
 "out the information below"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:532
+#: includes/class-featured-custom-post-type-widget-registrations.php:547
 msgid "Show Category Archive Link"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:536
-#: includes/class-featured-custom-post-type-widget-registrations.php:545
+#: includes/class-featured-custom-post-type-widget-registrations.php:551
+#: includes/class-featured-custom-post-type-widget-registrations.php:560
 msgid "Link Text:"
 msgstr ""
 
-#: includes/class-featured-custom-post-type-widget-registrations.php:542
+#: includes/class-featured-custom-post-type-widget-registrations.php:557
 msgid "Show Archive Link"
 msgstr ""

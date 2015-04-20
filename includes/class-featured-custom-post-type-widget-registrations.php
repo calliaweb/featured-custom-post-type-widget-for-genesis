@@ -114,7 +114,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		);
 
 		// Extract the custom tax term, if provided
-		if ( 'any' != $instance['tax_term'] ) {
+		if ( 'any' !== $instance['tax_term'] ) {
 			list( $post_tax, $post_term ) = explode( '/', $instance['tax_term'], 2 );
 			$query_args['tax_query'] = array(
 				array(
@@ -145,12 +145,13 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 				'context' => 'entry',
 			) );
 
-			$image = genesis_get_image( array(
+			$size = $instance['image_size'];
+			$image = apply_filters( 'featured_custom_post_type_image', genesis_get_image( array(
 				'format'  => 'html',
 				'size'    => $instance['image_size'],
 				'context' => 'featured-post-widget',
 				'attr'    => genesis_parse_attr( 'entry-image-widget' ),
-			) );
+			) ), $size );
 
 			if ( $instance['show_image'] && $image )
 				printf( '<a href="%s" title="%s" class="%s">%s</a>', get_permalink(), the_title_attribute( 'echo=0' ), esc_attr( $instance['image_alignment'] ), $image );
@@ -243,7 +244,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 						'terms'    => $post_term,
 					)
 				);
-			 }
+			}
 
 			$wp_query = new WP_Query( $query_args );
 
@@ -253,7 +254,10 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 				while ( have_posts() ) {
 					the_post();
 					$_genesis_displayed_ids[] = get_the_ID();
-					$listitems .= sprintf( '<li><a href="%s" title="%s">%s</a></li>', get_permalink(), the_title_attribute( 'echo=0' ), get_the_title() );
+					$extra_title = sprintf( '<a href="%s">%s</a>', get_permalink(), get_the_title() );
+					$listitems  .= '<li>';
+					$listitems  .= apply_filters( 'featured_custom_post_type_extra_title', $extra_title );
+					$listitems  .= '</li>';
 				}
 
 				if ( mb_strlen( $listitems ) > 0 )
@@ -264,21 +268,32 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 			wp_reset_query();
 		}
 
-		if ( ! empty( $instance['more_from_category'] )
-		&& ( 'category' == substr( $instance['tax_term'], 0, 8 ) ) ) {
-			$post_cat = get_cat_ID( substr( $instance['tax_term'], 9 ) );
+		if ( ! empty( $instance['more_from_category'] ) && ! empty( $instance['more_from_category_text'] ) && 'any' !== $instance['tax_term'] ) {
+
+			list( $post_tax, $post_term ) = explode( '/', $instance['tax_term'], 2 );
+
 			printf(
-				'<p class="more-from-category"><a href="%1$s" title="%2$s">%3$s</a></p>',
-				esc_url( get_category_link( $post_cat ) ),
-				esc_attr( get_cat_name( $post_cat ) ),
+				'<p class="more-from-category"><a href="%1$s">%2$s</a></p>',
+				esc_url( get_term_link( $post_term, $post_tax ) ),
 				esc_html( $instance['more_from_category_text'] )
 			);
 		}
 
 		if ( ! empty( $instance['archive_link'] ) && ! empty( $instance['archive_text'] ) ) {
+
+			$archive_url = get_post_type_archive_link( $instance['post_type'] );
+			if( 'post' === $instance[ 'post_type'] ) {
+				$postspage   = get_option( 'page_for_posts' );
+				$archive_url = get_permalink( get_post( $postspage )->ID );
+				$frontpage   = get_option( 'show_on_front' );
+				if ( 'posts' === $frontpage ) {
+					$archive_url = get_home_url();
+				}
+			}
+
 			printf(
 				'<p class="more-from-category"><a href="%1$s">%2$s</a></p>',
-				get_post_type_archive_link( $instance['post_type'] ),
+				esc_url( $archive_url ),
 				esc_html( $instance['archive_text'] )
 			);
 
@@ -497,7 +512,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 					</select>
 					<br />
 					<label for="<?php echo esc_attr( $this->get_field_id( 'content_limit' ) ); ?>"><?php _e( 'Limit content to', 'featured-custom-post-type-widget-for-genesis' ); ?>
-						<input type="text" id="<?php echo esc_attr( $this->get_field_id( 'image_alignment' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'content_limit' ) ); ?>" value="<?php echo esc_attr( intval( $instance['content_limit'] ) ); ?>" size="3" />
+						<input type="text" id="<?php echo esc_attr( $this->get_field_id( 'content_limit' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'content_limit' ) ); ?>" value="<?php echo esc_attr( intval( $instance['content_limit'] ) ); ?>" size="3" />
 						<?php _e( 'characters', 'featured-custom-post-type-widget-for-genesis' ); ?>
 					</label>
 				</p>
@@ -659,7 +674,12 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 		}
 
 		//* And emit it
-		echo json_encode( $taxes );
+		if ( function_exists( 'wp_json_encode' ) ) {
+			echo wp_json_encode( $taxes );
+		}
+		else {
+			echo json_encode( $taxes );
+		}
 		die();
 
 	}
