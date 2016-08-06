@@ -70,6 +70,12 @@ Thank you to <a href="https://github.com/robincornett">Robin Cornett</a> for all
 
 ### Changelog
 
+#### 2.1.1
+* fix: ensure select-box widths will not overrun widget space
+* new: post type displays by name instead of slug
+* new: cat/tax list displays name instead of slug
+* security: improved sanitization and validation
+
 #### 2.1.0
 * added filter for featured post image
 * added filter for extra posts list
