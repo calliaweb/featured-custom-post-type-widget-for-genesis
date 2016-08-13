@@ -7,6 +7,7 @@
  * @author  Jo Waltham
  * @author  Pete Favelle
  * @author  Robin Cornett
+ * @author  Mika Epstein
  * @license GPL-2.0+
  *
  */
@@ -350,32 +351,38 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 
 				<p>
 					<label for="<?php echo esc_attr( $this->get_field_id( 'post_type' ) ); ?>"><?php _e( 'Post Type:', 'featured-custom-post-type-widget-for-genesis' ); ?> </label>
-					<select id="<?php echo esc_attr( $this->get_field_id( 'post_type' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'post_type' ) ); ?>" onchange="tax_term_postback('<?php echo esc_attr( $this->get_field_id( 'tax_term' ) ); ?>', this.value);" >
+					<div style="display:inline-block;max-width:90%;">
+					<select id="<?php echo esc_attr( $this->get_field_id( 'post_type' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'post_type' ) ); ?>" onchange="tax_term_postback('<?php echo esc_attr( $this->get_field_id( 'tax_term' ) ); ?>', this.value);" style="width:100%" >
 
 						<?php
-						echo '<option value="any" '. selected( 'any', $instance['post_type'], false ) .'>'. __( 'any', 'featured-custom-post-type-widget-for-genesis' ) .'</option>';
+						echo '<option value="any" '. selected( 'any', $instance['post_type'], false ) .'>'. __( 'Any', 'featured-custom-post-type-widget-for-genesis' ) .'</option>';
 						foreach ( $item->post_type_list as $post_type_item ) {
-							echo '<option value="'. esc_attr( $post_type_item ) .'"'. selected( esc_attr( $post_type_item ), $instance['post_type'], false ) .'>'. esc_attr( $post_type_item ) .'</option>';
+							$the_post_type = get_post_type_object( $post_type_item );
+							echo '<option value="'. esc_attr( $post_type_item ) .'"'. selected( esc_attr( $post_type_item ), $instance['post_type'], false ) .'>'. esc_attr( $the_post_type->labels->singular_name ) .'</option>';
 						}
 
 						?>
 					</select>
+					</div>
 				</p>
 
 				<p>
 					<label for="<?php echo esc_attr( $this->get_field_id( 'tax_term' ) ); ?>"><?php _e( 'Category/Term:', 'featured-custom-post-type-widget-for-genesis' ); ?> </label>
-					<select id="<?php echo esc_attr( $this->get_field_id( 'tax_term' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'tax_term' ) ); ?>">
+					<div style="display:inline-block;max-width:90%;">
+					<select id="<?php echo esc_attr( $this->get_field_id( 'tax_term' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'tax_term' ) ); ?>" style="width:100%" >
 
 						<?php
-						echo '<option value="any" '. selected( 'any', $instance['tax_term'], false ) .'>'. __( 'any', 'featured-custom-post-type-widget-for-genesis' ) .'</option>';
+						echo '<option value="any" '. selected( 'any', $instance['tax_term'], false ) .'>'. __( 'Any', 'featured-custom-post-type-widget-for-genesis' ) .'</option>';
 						foreach ( $item->tax_term_list as $tax_term_item ) {
-							$tax_term_desc = $tax_term_item->taxonomy . '/' . $tax_term_item->name;
+							$tax_term_obj = get_taxonomy( $tax_term_item->taxonomy );
+							$tax_term_desc = $tax_term_obj->labels->singular_name . '/' . $tax_term_item->name;
 							$tax_term_slug = $tax_term_item->taxonomy . '/' . $tax_term_item->slug;
 							echo '<option value="'. esc_attr( $tax_term_slug ) .'"'. selected( esc_attr( $tax_term_slug ), $instance['tax_term'], false ) .'>'. esc_attr( $tax_term_desc ) .'</option>';
 						}
 
 						?>
 					</select>
+					</div>
 				</p>
 
 				<p>
@@ -615,11 +622,19 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 	function build_ajax_list() {
 
 		$item = new stdClass;
+
+		//* Sanitize and validate that the post type was valid to begin with
+		//* If not, use 'any' to prevent shenanigans
+		$post_type = sanitize_text_field( $_POST['post_type'] );
+		if ( !post_type_exists( $post_type ) ) {
+			$post_type = 'any';
+		}
+
 		//* Fetch a list of available taxonomies for the current post type
-		if ( 'any' == $_POST['post_type'] ) {
+		if ( 'any' == $post_type ) {
 			$taxonomies = get_taxonomies();
 		} else {
-			$taxonomies = get_object_taxonomies( $_POST['post_type'] );
+			$taxonomies = get_object_taxonomies( $post_type );
 		}
 
 		//* And from there, a list of available terms in that tax
