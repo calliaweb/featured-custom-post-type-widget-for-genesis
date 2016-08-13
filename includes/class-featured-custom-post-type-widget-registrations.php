@@ -399,6 +399,7 @@ class Genesis_Featured_Custom_Post_Type extends WP_Widget {
 					<label for="<?php echo esc_attr( $this->get_field_id( 'orderby' ) ); ?>"><?php _e( 'Order By:', 'featured-custom-post-type-widget-for-genesis' ); ?> </label>
 					<select id="<?php echo esc_attr( $this->get_field_id( 'orderby' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'orderby' ) ); ?>">
 						<option value="date" <?php selected( 'date', $instance['orderby'] ); ?>><?php _e( 'Date', 'featured-custom-post-type-widget-for-genesis' ); ?></option>
+						<option value="menu_order" <?php selected( 'menu_order', $instance['orderby'] ); ?>><?php _e( 'Menu Order', 'featured-custom-post-type-widget-for-genesis' ); ?></option>
 						<option value="title" <?php selected( 'title', $instance['orderby'] ); ?>><?php _e( 'Title', 'featured-custom-post-type-widget-for-genesis' ); ?></option>
 						<option value="parent" <?php selected( 'parent', $instance['orderby'] ); ?>><?php _e( 'Parent', 'featured-custom-post-type-widget-for-genesis' ); ?></option>
 						<option value="ID" <?php selected( 'ID', $instance['orderby'] ); ?>><?php _e( 'ID', 'featured-custom-post-type-widget-for-genesis' ); ?></option>
